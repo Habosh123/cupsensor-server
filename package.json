@@ -1,8 +1,7 @@
 {
   "name": "cupsensor-server",
   "version": "1.0.0",
-  "description": "CupSensor VK notification API",
-  "main": "api/fill.js",
+  "type": "module",
   "scripts": {
     "start": "node api/fill.js"
   },
