@@ -4,7 +4,7 @@
   "description": "CupSensor VK notification API",
   "main": "api/fill.js",
   "scripts": {
-    "start": "vercel dev"
+    "start": "node api/fill.js"
   },
   "dependencies": {
     "axios": "^1.6.0"
