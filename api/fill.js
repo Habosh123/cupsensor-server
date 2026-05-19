@@ -25,23 +25,29 @@ export default async function handler(req, res) {
     }
 
     const fill = Number(req.body.fill || 0);
-    const cups = Number(req.body.cups || 0);
-    const distance = Number(req.body.distance || 0);
-    const deviceId = req.body.device_id || 'cup_sensor_01';
 
-    if (fill < 90) {
+    const compartment = Number(req.body.compartment || 0);
+
+    const compartmentSize =
+      req.body.compartment_size ||
+      (
+        compartment === 1 ? 'S' :
+        compartment === 2 ? 'M' :
+        compartment === 3 ? 'L' :
+        'не указан'
+      );
+
+    if (fill < 80) {
       return res.status(200).json({
         ok: true,
         sent: false,
-        reason: 'fill < 90'
+        reason: 'fill < 80'
       });
     }
 
     const message =
-      '⚠️ Контейнер заполнен на 90%\n\n' +
-      'Устройство: ' + deviceId + '\n' +
-      'Количество стаканчиков: ' + cups + '\n' +
-      'Расстояние: ' + distance + ' мм';
+      '⚠️ Контейнер заполнен на 80%\n\n' +
+      'Отсек: ' + compartmentSize;
 
     const vkResponse = await axios.post(
       'https://api.vk.com/method/messages.send',
@@ -59,6 +65,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       ok: true,
+      sent: true,
+      message,
       vk: vkResponse.data
     });
 
