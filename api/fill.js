@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+const DEFAULT_ADDRESS = 'Комсомольский проспект 113А, главный корпус';
+const DEFAULT_LOCATION = 'Второй этаж, у кабинета 201';
+
 export default async function handler(req, res) {
 
   if (req.method === 'GET') {
@@ -25,7 +28,6 @@ export default async function handler(req, res) {
     }
 
     const fill = Number(req.body.fill || 0);
-
     const compartment = Number(req.body.compartment || 0);
 
     const compartmentSize =
@@ -37,6 +39,18 @@ export default async function handler(req, res) {
         'не указан'
       );
 
+    const compartmentLabel =
+      req.body.compartment_label ||
+      `Отсек ${compartmentSize}`;
+
+    const address =
+      req.body.address ||
+      DEFAULT_ADDRESS;
+
+    const location =
+      req.body.location ||
+      DEFAULT_LOCATION;
+
     if (fill < 80) {
       return res.status(200).json({
         ok: true,
@@ -46,8 +60,10 @@ export default async function handler(req, res) {
     }
 
     const message =
-      '⚠️ Контейнер заполнен на 80%\n\n' +
-      'Отсек: ' + compartmentSize;
+      `⚠️ Контейнер заполнен на ${fill}%\n\n` +
+      `📍 Адрес: ${address}\n` +
+      `🏫 Расположение: ${location}\n` +
+      `🗂 ${compartmentLabel}`;
 
     const vkResponse = await axios.post(
       'https://api.vk.com/method/messages.send',
